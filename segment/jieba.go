@@ -1,6 +1,8 @@
 package segment
 
 import (
+	"github.com/gogf/gf/v2/os/glog"
+	"github.com/gogf/gf/v2/text/gstr"
 	"github.com/yanyiwu/gojieba"
 )
 
@@ -27,7 +29,42 @@ func (sg *Jieba) Cut(text string) (res Tokens) {
 	return
 }
 
-func (sg *Jieba) Tag(text string) (res Tokens) {
-	res.Words = sg.c.Tag(text)
+func (sg *Jieba) Pos(text string) (res []Pos) {
+	pos := sg.c.Tag(text)
+	for _, text := range pos {
+		p := gstr.Explode("/", text)
+		if len(p) == 1 {
+			glog.Info(nil, text, p)
+			continue
+		}
+		res = append(res, Pos{
+			Word: p[0],
+			Type: p[1],
+		})
+	}
+	return
+}
+
+func (sg *Jieba) Ner(text string, ps ...string) (res []Ner) {
+	if len(ps) == 0 {
+		ps = NerPosFilter
+	}
+	pos := sg.Pos(text)
+	for _, p := range pos {
+		// 将 CJK 字符串转为 rune 数组并获取其长度
+		if gstr.LenRune(p.Word) == 1 {
+			continue
+		}
+
+		// 只需要指定的词性
+		if !gstr.InArray(ps, p.Type) {
+			continue
+		}
+
+		res = append(res, Ner{
+			Word: p.Word,
+			Type: p.Type,
+		})
+	}
 	return
 }

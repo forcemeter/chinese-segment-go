@@ -1,6 +1,7 @@
 package segment
 
 import (
+	"github.com/gogf/gf/v2/os/gtime"
 	"strings"
 	"testing"
 )
@@ -46,6 +47,11 @@ func Cut(t *testing.T) {
 
 	t.Log(find)
 	t.Log(strings.Join(token.Words, exp))
+
+	startTime := gtime.Now().TimestampMilli()
+	t.Log(sg.Pos(text))
+	t.Log(sg.Ner(text))
+	t.Log("use time (ms)", gtime.Now().TimestampMilli()-startTime)
 }
 
 func BenchmarkGse(b *testing.B) {
@@ -78,6 +84,7 @@ func BenchmarkJieba(b *testing.B) {
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
 			sg.Cut(text)
+			sg.Pos(text)
 		}
 	})
 }
