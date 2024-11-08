@@ -56,6 +56,10 @@ func (sg *Jieba) Ner(text string, ps ...string) (res []Ner) {
 			continue
 		}
 
+		if p.Type == "" {
+			p.Type = "nz"
+		}
+
 		// 只需要指定的词性
 		if !gstr.InArray(ps, p.Type) {
 			continue

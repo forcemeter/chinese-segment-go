@@ -26,4 +26,4 @@ type Pos struct {
 
 // NerPosFilter 通过词性简单实现实体词提取
 // 人名（nr）、地名（ns）、机构名（nt）、专有名词（nz）、动词（v）
-var NerPosFilter = []string{"n", "ns", "nr", "nt", "v"}
+var NerPosFilter = []string{"n", "ns", "nr", "nrt", "nrfg", "nt", "nz"}
